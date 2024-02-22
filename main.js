@@ -16,6 +16,8 @@ const sizes = {
   width: window.innerWidth,
   height: window.innerHeight
 }
+const textureleLoader = new THREE.TextureLoader();
+const matCapTexture = textureleLoader.load("./matcaps/1.png")
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, .1, 1000);
 window.addEventListener("resize", () => {
   sizes.width = window.innerWidth;
@@ -27,12 +29,13 @@ window.addEventListener("resize", () => {
 
 
 camera.position.z = 2
-camera.position.x = 1
-camera.position.y = 1
+// camera.position.x = 1
+// camera.position.y = 1
 
 
 const controls = new OrbitControls(camera, canvas);
-
+const axesHelper = new THREE.AxesHelper()
+scene.add(axesHelper)
 
 /* 
 
@@ -40,10 +43,10 @@ const controls = new OrbitControls(camera, canvas);
 */
 const fontLoader = new FontLoader();
 fontLoader.load(
-  "./public/fonts/helvetiker_regular.typeface.json",
+  "./fonts/helvetiker_regular.typeface.json",
   (font) => {
     const textGeometry = new TextGeometry(
-      "Hello Tanvir Hossain",
+      "Hello Tanvir ",
       {
         font,
         size: .5,
@@ -56,9 +59,32 @@ fontLoader.load(
         bevelSegments: 4
       }
     );
-    const textMaterial = new THREE.MeshBasicMaterial({ wireframe: true });
+    // console.log(textGeometry.computeBoundingBox())
+    // textGeometry.translate(
+    //   -(textGeometry.boundingBox.max.x - .02) * .5,
+    //   - (textGeometry.boundingBox.max.y * .5 - .02) * .5,
+    //   - (textGeometry.boundingBox.max.z * .5 - .03) * .5,
+    // )
+    textGeometry.center();
+    const textMaterial = new THREE.MeshMatcapMaterial({
+      matcap: matCapTexture,
+      wireframe: true
+    });
+    // textMaterial.wireframe = true
+
+
     const text = new THREE.Mesh(textGeometry, textMaterial)
     scene.add(text)
+    for (let i = 0; i <= 100; i++) {
+      const donutGeometry = new THREE.TorusGeometry(.3, .2, 20, 45)
+      const donutMaterial = new THREE.MeshBasicMaterial({ matcap: matCapTexture })
+      const donut = new THREE.Mesh(donutGeometry, donutMaterial)
+      donut.position.x = (Math.random() - .5) * 10
+      donut.position.y = (Math.random() - .5) * 10
+      donut.position.z = (Math.random() - .5) * 10
+      scene.add(donut)
+    }
+    console.log(textGeometry.boundingBox)
   }
 
 
