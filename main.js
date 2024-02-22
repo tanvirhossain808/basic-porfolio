@@ -28,14 +28,14 @@ window.addEventListener("resize", () => {
 })
 
 
-camera.position.z = 2
+camera.position.z = 3
 // camera.position.x = 1
 // camera.position.y = 1
 
 
 const controls = new OrbitControls(camera, canvas);
 const axesHelper = new THREE.AxesHelper()
-scene.add(axesHelper)
+// scene.add(axesHelper)
 
 /* 
 
@@ -46,7 +46,8 @@ fontLoader.load(
   "./fonts/helvetiker_regular.typeface.json",
   (font) => {
     const textGeometry = new TextGeometry(
-      "Hello Tanvir ",
+      'Tanvir Hossain. \n web developer .',
+
       {
         font,
         size: .5,
@@ -75,15 +76,20 @@ fontLoader.load(
 
     const text = new THREE.Mesh(textGeometry, textMaterial)
     scene.add(text)
-    for (let i = 0; i <= 100; i++) {
-      const donutGeometry = new THREE.TorusGeometry(.3, .2, 20, 45)
-      const donutMaterial = new THREE.MeshBasicMaterial({ matcap: matCapTexture })
-      const donut = new THREE.Mesh(donutGeometry, donutMaterial)
+    console.time("donut")
+    const donutGeometry = new THREE.TorusGeometry(.3, .2, 20, 45)
+    for (let i = 0; i <= 500; i++) {
+      const donut = new THREE.Mesh(donutGeometry, textMaterial)
       donut.position.x = (Math.random() - .5) * 10
       donut.position.y = (Math.random() - .5) * 10
       donut.position.z = (Math.random() - .5) * 10
+      donut.rotation.x = Math.random() * Math.PI
+      donut.rotation.y = Math.random() * Math.PI
+      const scale = Math.random()
+      donut.scale.set(scale, scale, scale)
       scene.add(donut)
     }
+    console.timeEnd('donut')
     console.log(textGeometry.boundingBox)
   }
 
